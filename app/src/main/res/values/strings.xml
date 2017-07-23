@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2017 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+    <!-- Main activity -->
+    <string name="app_name">LeMaRiva SensorTag</string>
+    <string name="button_scan">Scan</string>
+    <string name="connect">Connect</string>
+    <string name="title_device_list">Device List</string>
+    <string name="device">Device</string>
+    <string name="header">Available BLE Devices</string>
+    <string name="disconnected">Device is not connected</string>
+    <string name="control">Done</string>
+    <string name="bt_not_supported">Bluetooth is not supported</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="bt_on">Bluetooth was turned  on</string>
+    <string name="bt_not_on">Bluetooth was not turned on</string>
+    <string name="app_closing">Exiting BLE SensorTag app</string>
+    <string-array name="device_filter"><item>B0:B4:48:</item></string-array>
+    <string name="nodevice">There are no SensorTags advertising within range. Please push the side button on the SensorTag to start advertising.</string>
+    <string name="scan_advice">The Android device is not scanning. Please tap \'Scan\' to scan for SensorTags.</string>
+    <string name="bt_adapter_disable">Disable Bluetooth adapter</string>
+    <string name="bt_adapter_reset">Reset Bluetooth adapter</string>
+
+
+    <!-- Device activity -->
+    <string name="dev_addr">Device address</string>
+    <string name="image">Image</string>
+
+    <!-- Sensor names-->
+    <string name="keys">Keys</string>
+    <string name="acc">Accelerometer</string>
+    <string name="mag">Magnetometer</string>
+    <string name="lux">Luxometer</string>
+    <string name="gyro">Gyroscope</string>
+    <string name="hum">Humidity</string>
+    <string name="bar">Barometer</string>
+    <string name="tAmb">Ambience Temperature</string>
+    <string name="tObj">Object Temperature</string>
+
+</resources>
