@@ -1,5 +1,5 @@
 /**************************************************************************************************
- Filename:       firmwareEntryTableRow.java
+ Filename:       BluetoothGATTDefines.java
 
  Copyright (c) 2013 - 2015 Texas Instruments Incorporated
 
@@ -50,81 +50,24 @@
 
 
  **************************************************************************************************/
-package com.lemariva.androidthings.util;
+package com.lemariva.androidthings.ble.common;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.lemariva.androidthings.ble.sensortag.R;
-
-public class firmwareEntryTableRow extends TableRow {
-    private final Paint linePaint;
-    protected final RelativeLayout rowLayout;
-    TextView subTitleView;
-    TextView tV;
-    tiFirmwareEntry ent;
-    public int position;
-    public firmwareEntryTableRow(Context con,tiFirmwareEntry entry) {
-        super(con);
-        this.ent = entry;
-        this.linePaint = new Paint() {
-            {
-                setStrokeWidth(1);
-                setARGB(255, 0, 0, 0);
-            }
-        };
-        this.rowLayout = new RelativeLayout(con);
-
-        tV = new TextView(con);
-        //tV.setId(500);
-        if (tV != null) {
-            tV.setText(String.format("%s %1.2f %s(%s)",entry.BoardType,entry.Version,entry.DevPack + " ",entry.WirelessStandard));
-        }
-
-        tV.setPadding(10,5,10,5);
-        tV.setTextSize(20);
-        //tV.setTypeface(Typeface.DEFAULT_BOLD);
-        RelativeLayout.LayoutParams tmpLayoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tmpLayoutParams.addRule(RelativeLayout.BELOW, tV.getId());
-
-
-        subTitleView = new TextView(con);
-        if (subTitleView != null) {
-            if (entry.compatible) subTitleView.setText(String.format("%s","Compatible"));
-            else subTitleView.setText("Not compatible");
-        }
-        subTitleView.setTextSize(12);
-        subTitleView.setLayoutParams(tmpLayoutParams);
-        subTitleView.setPadding(10,5,10,5);
-
-        this.rowLayout.addView(tV);
-        this.rowLayout.addView(subTitleView);
-        this.addView(this.rowLayout);
-    }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawLine(0, canvas.getHeight() - this.linePaint.getStrokeWidth(), canvas.getWidth(), canvas.getHeight() - this.linePaint.getStrokeWidth(), this.linePaint);
-    }
-
-    public void setGrayedOut(Boolean grayed) {
-        if (grayed == true) {
-            tV.setTextColor(Color.LTGRAY);
-            subTitleView.setTextColor(Color.LTGRAY);
-        }
-        else {
-            tV.setTextColor(Color.BLACK);
-            subTitleView.setTextColor(Color.BLACK);
-        }
+public class BluetoothGATTDefines {
+    public static final Map<Integer,String> gattErrorCodeStrings;
+    static {
+        gattErrorCodeStrings = new HashMap<Integer, String>();
+        gattErrorCodeStrings.put(0, "GATT Success");
+        gattErrorCodeStrings.put(2, "GATT Read Not Permitted");
+        gattErrorCodeStrings.put(3, "GATT Write Not Permitted");
+        gattErrorCodeStrings.put(5, "GATT Insufficient Authentication");
+        gattErrorCodeStrings.put(6, "GATT Request Not Supported");
+        gattErrorCodeStrings.put(7, "GATT Invalid Offset");
+        gattErrorCodeStrings.put(13, "GATT Invalid Attribute Length");
+        gattErrorCodeStrings.put(15, "GATT Insufficient Encryption");
+        gattErrorCodeStrings.put(143, "GATT Connection Congested");
+        gattErrorCodeStrings.put(257, "GATT Failure");
     }
 }

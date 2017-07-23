@@ -1,5 +1,5 @@
 /**************************************************************************************************
-  Filename:       DeviceView.java
+  Filename:       AboutDialog.java
 
   Copyright (c) 2013 - 2014 Texas Instruments Incorporated
 
@@ -52,86 +52,96 @@
  **************************************************************************************************/
 package com.lemariva.androidthings.ble.sensortag;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.view.Window;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 
+// import android.util.Log;
 
+public class AboutDialog extends Dialog {
+  // Log
+  // private static final String TAG = "AboutDialog";
 
-	// Fragment for Device View
-	public class DeviceView extends Fragment {
+  private Context mContext;
+  private static AboutDialog mDialog;
+  private static OkListener mOkListener;
+  private final String errorHTML = "<html><body><h1>Failed to load web page</h1></body></html>";
 
-	public static DeviceView mInstance = null;
+  public AboutDialog(Context context) {
+    super(context);
+    mContext = context;
+    mDialog = this;
+    mOkListener = new OkListener();
+  }
 
-	// GUI
-	private TableLayout table;
-	public boolean first = true;
-	
-	// House-keeping
-	private DeviceActivity mActivity;
-	private boolean mBusy;
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    setContentView(R.layout.dialog_about);
 
-	// The last two arguments ensure LayoutParams are inflated properly.
-	View view;
-	
-	public DeviceView() {
-		super();
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-		mInstance = this;
-		mActivity = (DeviceActivity) getActivity();
-		
-		view = inflater.inflate(R.layout.generic_services_browser, container,false);
-		table = (TableLayout) view.findViewById(R.id.generic_services_layout);
+    // From About.html web page
+    WebView webView = (WebView) findViewById(R.id.web_content);
+    webView.setWebViewClient(new WebViewClient(){
+      
+    	@Override
+      public boolean shouldOverrideUrlLoading(WebView view, String url) {
+          view.loadUrl(url);
+          return false;
+      }
+      
+    	@Override
+    	public void onPageFinished(WebView view, final String url) {
+    		// Log.i(TAG,"Web page loaded: " + url);
+    	}
 
-		// Notify activity that UI has been inflated
-		mActivity.onViewInflated(view);
-		
-		return view;
-	}
+    	@Override
+    	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+    		// Do something
+    		view.loadData(errorHTML, "text/html", "UTF-8");
+    		// Log.e(TAG,"Failed to load web page");
+    	}
+    });
 
-	public void showProgressOverlay(String title) {
-		
-	}
-		
-	public void addRowToTable(TableRow row) {
-		if (first) {
-			table.removeAllViews();
-			table.addView(row);
-			table.requestLayout();
-			first = false;
-		}
-		else {
-			table.addView(row);
-			table.requestLayout();
-		}
-	}
-    public void removeRowsFromTable() {
-        table.removeAllViews();
+    // Header
+    Resources res = mContext.getResources();
+    String appName = res.getString(R.string.app_name);
+    TextView title = (TextView) findViewById(R.id.title);
+    title.setText("About " + appName);
+
+    // Application info
+    TextView head = (TextView) findViewById(R.id.header);
+    String appVersion = "Revision: ";
+    try {
+      appVersion += mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+    } catch (NameNotFoundException e) {
+      // Log.v(TAG, e.getMessage());
     }
+    head.setText(appVersion);
 
+    // Dismiss button
+    Button okButton = (Button) findViewById(R.id.buttonOK);
+    okButton.setOnClickListener(mOkListener);
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
+    // Device information
+    TextView foot = (TextView) findViewById(R.id.footer);
+    String txt = Build.MANUFACTURER.toUpperCase() + " " + Build.MODEL + " Android " + Build.VERSION.RELEASE + " " + Build.DISPLAY;
 
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-	void setBusy(boolean f) {
-		if (f != mBusy)
-		{
-			mActivity.showBusyIndicator(f);
-			mBusy = f;
-		}
-	}
+    foot.setText(txt);
+  }
+
+  private class OkListener implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+      mDialog.dismiss();
+    }
+  }
 }

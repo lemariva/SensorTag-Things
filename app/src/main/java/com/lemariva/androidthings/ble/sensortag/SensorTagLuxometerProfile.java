@@ -1,5 +1,5 @@
 /**************************************************************************************************
- Filename:       firmwareEntryTableRow.java
+ Filename:       SensorTagLuxometerProfile.java
 
  Copyright (c) 2013 - 2015 Texas Instruments Incorporated
 
@@ -50,81 +50,74 @@
 
 
  **************************************************************************************************/
-package com.lemariva.androidthings.util;
+package com.lemariva.androidthings.ble.sensortag;
 
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
-import com.lemariva.androidthings.ble.sensortag.R;
+import com.lemariva.androidthings.ble.common.BluetoothLeService;
+import com.lemariva.androidthings.ble.common.GattInfo;
+import com.lemariva.androidthings.ble.common.GenericBluetoothProfile;
+import com.lemariva.androidthings.util.GenericCharacteristicTableRow;
+import com.lemariva.androidthings.util.Point3D;
 
-public class firmwareEntryTableRow extends TableRow {
-    private final Paint linePaint;
-    protected final RelativeLayout rowLayout;
-    TextView subTitleView;
-    TextView tV;
-    tiFirmwareEntry ent;
-    public int position;
-    public firmwareEntryTableRow(Context con,tiFirmwareEntry entry) {
-        super(con);
-        this.ent = entry;
-        this.linePaint = new Paint() {
-            {
-                setStrokeWidth(1);
-                setARGB(255, 0, 0, 0);
-            }
-        };
-        this.rowLayout = new RelativeLayout(con);
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-        tV = new TextView(con);
-        //tV.setId(500);
-        if (tV != null) {
-            tV.setText(String.format("%s %1.2f %s(%s)",entry.BoardType,entry.Version,entry.DevPack + " ",entry.WirelessStandard));
-        }
-
-        tV.setPadding(10,5,10,5);
-        tV.setTextSize(20);
-        //tV.setTypeface(Typeface.DEFAULT_BOLD);
-        RelativeLayout.LayoutParams tmpLayoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tmpLayoutParams.addRule(RelativeLayout.BELOW, tV.getId());
-
-
-        subTitleView = new TextView(con);
-        if (subTitleView != null) {
-            if (entry.compatible) subTitleView.setText(String.format("%s","Compatible"));
-            else subTitleView.setText("Not compatible");
-        }
-        subTitleView.setTextSize(12);
-        subTitleView.setLayoutParams(tmpLayoutParams);
-        subTitleView.setPadding(10,5,10,5);
-
-        this.rowLayout.addView(tV);
-        this.rowLayout.addView(subTitleView);
-        this.addView(this.rowLayout);
-    }
+public class SensorTagLuxometerProfile extends GenericBluetoothProfile {
+		public SensorTagLuxometerProfile(Context con,BluetoothDevice device,BluetoothGattService service,BluetoothLeService controller) {
+			super(con,device,service,controller);
+			this.tRow =  new GenericCharacteristicTableRow(con);
+			
+			List<BluetoothGattCharacteristic> characteristics = this.mBTService.getCharacteristics();
+			
+			for (BluetoothGattCharacteristic c : characteristics) {
+				if (c.getUuid().toString().equals(SensorTagGatt.UUID_OPT_DATA.toString())) {
+					this.dataC = c;
+				}
+				if (c.getUuid().toString().equals(SensorTagGatt.UUID_OPT_CONF.toString())) {
+					this.configC = c;
+				}
+				if (c.getUuid().toString().equals(SensorTagGatt.UUID_OPT_PERI.toString())) {
+					this.periodC = c;
+				}
+			}
+			
+			this.tRow.sl1.autoScale = true;
+			this.tRow.sl1.autoScaleBounceBack = true;
+			this.tRow.sl1.setColor(255, 0, 150, 125);
+			this.tRow.setIcon(this.getIconPrefix(), this.dataC.getUuid().toString());
+			
+			this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
+			this.tRow.uuidLabel.setText(this.dataC.getUuid().toString());
+			this.tRow.value.setText("0.0 Lux");
+			this.tRow.periodBar.setProgress(100);
+		}
+		
+		public static boolean isCorrectService(BluetoothGattService service) {
+			if ((service.getUuid().toString().compareTo(SensorTagGatt.UUID_OPT_SERV.toString())) == 0) {
+				return true;
+			}
+			else return false;
+		}
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawLine(0, canvas.getHeight() - this.linePaint.getStrokeWidth(), canvas.getWidth(), canvas.getHeight() - this.linePaint.getStrokeWidth(), this.linePaint);
-    }
-
-    public void setGrayedOut(Boolean grayed) {
-        if (grayed == true) {
-            tV.setTextColor(Color.LTGRAY);
-            subTitleView.setTextColor(Color.LTGRAY);
-        }
-        else {
-            tV.setTextColor(Color.BLACK);
-            subTitleView.setTextColor(Color.BLACK);
-        }
+    public void didUpdateValueForCharacteristic(BluetoothGattCharacteristic c) {
+        byte[] value = c.getValue();
+				if (c.equals(this.dataC)){
+					Point3D v = Sensor.LUXOMETER.convert(value);
+					if (this.tRow.config == false) this.tRow.value.setText(String.format("%.1f Lux", v.x));
+					this.tRow.sl1.addValue((float)v.x);
+				}
+		}
+    @Override
+    public Map<String,String> getMQTTMap() {
+        Point3D v = Sensor.LUXOMETER.convert(this.dataC.getValue());
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("light",String.format("%.2f",v.x));
+        return map;
     }
 }

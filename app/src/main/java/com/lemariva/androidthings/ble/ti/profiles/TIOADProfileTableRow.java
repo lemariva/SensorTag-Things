@@ -1,5 +1,5 @@
 /**************************************************************************************************
- Filename:       firmwareEntryTableRow.java
+ Filename:       TIOADProfileTableRow.java
 
  Copyright (c) 2013 - 2015 Texas Instruments Incorporated
 
@@ -50,81 +50,25 @@
 
 
  **************************************************************************************************/
-package com.lemariva.androidthings.util;
+package com.lemariva.androidthings.ble.ti.profiles;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
+import android.content.Intent;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
-import com.lemariva.androidthings.ble.sensortag.R;
+import com.lemariva.androidthings.util.GenericCharacteristicTableRow;
 
-public class firmwareEntryTableRow extends TableRow {
-    private final Paint linePaint;
-    protected final RelativeLayout rowLayout;
-    TextView subTitleView;
-    TextView tV;
-    tiFirmwareEntry ent;
-    public int position;
-    public firmwareEntryTableRow(Context con,tiFirmwareEntry entry) {
-        super(con);
-        this.ent = entry;
-        this.linePaint = new Paint() {
-            {
-                setStrokeWidth(1);
-                setARGB(255, 0, 0, 0);
-            }
-        };
-        this.rowLayout = new RelativeLayout(con);
+public class TIOADProfileTableRow extends GenericCharacteristicTableRow {
 
-        tV = new TextView(con);
-        //tV.setId(500);
-        if (tV != null) {
-            tV.setText(String.format("%s %1.2f %s(%s)",entry.BoardType,entry.Version,entry.DevPack + " ",entry.WirelessStandard));
-        }
+    public static final String ACTION_VIEW_CLICKED = "com.lemariva.androidthings.ble.ti.profiles.TIOADProfileTableRow.ACTION_VIEW_CLICKED";
 
-        tV.setPadding(10,5,10,5);
-        tV.setTextSize(20);
-        //tV.setTypeface(Typeface.DEFAULT_BOLD);
-        RelativeLayout.LayoutParams tmpLayoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tmpLayoutParams.addRule(RelativeLayout.BELOW, tV.getId());
-
-
-        subTitleView = new TextView(con);
-        if (subTitleView != null) {
-            if (entry.compatible) subTitleView.setText(String.format("%s","Compatible"));
-            else subTitleView.setText("Not compatible");
-        }
-        subTitleView.setTextSize(12);
-        subTitleView.setLayoutParams(tmpLayoutParams);
-        subTitleView.setPadding(10,5,10,5);
-
-        this.rowLayout.addView(tV);
-        this.rowLayout.addView(subTitleView);
-        this.addView(this.rowLayout);
-    }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawLine(0, canvas.getHeight() - this.linePaint.getStrokeWidth(), canvas.getWidth(), canvas.getHeight() - this.linePaint.getStrokeWidth(), this.linePaint);
-    }
-
-    public void setGrayedOut(Boolean grayed) {
-        if (grayed == true) {
-            tV.setTextColor(Color.LTGRAY);
-            subTitleView.setTextColor(Color.LTGRAY);
-        }
-        else {
-            tV.setTextColor(Color.BLACK);
-            subTitleView.setTextColor(Color.BLACK);
-        }
-    }
+	public TIOADProfileTableRow(Context con) {
+		super(con);
+	}
+	@Override 
+	public void onClick(View v) {
+		//Override click and launch the OAD screen
+        Intent intent = new Intent(ACTION_VIEW_CLICKED);
+        this.context.sendBroadcast(intent);
+	}
 }

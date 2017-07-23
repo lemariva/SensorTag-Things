@@ -50,9 +50,9 @@
 
 
  **************************************************************************************************/
-package com.example.ti.ble.sensortag;
+package com.lemariva.androidthings.ble.sensortag;
 
-import com.example.ti.util.Point3D;
+import com.lemariva.androidthings.util.Point3D;
 
 
 /**

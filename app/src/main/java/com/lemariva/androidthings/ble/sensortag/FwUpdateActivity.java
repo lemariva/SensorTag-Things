@@ -50,15 +50,7 @@
 
 
  **************************************************************************************************/
-package com.example.ti.ble.sensortag;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+package com.lemariva.androidthings.ble.sensortag;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -83,12 +75,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ti.ble.common.BluetoothLeService;
-import com.example.ti.ble.sensortag.R;
-import com.example.ti.util.Conversion;
+import com.lemariva.androidthings.ble.common.BluetoothLeService;
+import com.lemariva.androidthings.util.Conversion;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FwUpdateActivity extends Activity {
-  public final static String EXTRA_MESSAGE = "com.example.ti.ble.sensortag.MESSAGE";
+  public final static String EXTRA_MESSAGE = "com.lemariva.androidthings.ble.sensortag.MESSAGE";
   // Log
   private static String TAG = "FwUpdateActivity";
 

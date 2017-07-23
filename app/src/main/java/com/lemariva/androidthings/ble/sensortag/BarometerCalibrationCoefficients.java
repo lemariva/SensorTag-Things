@@ -50,7 +50,7 @@
 
 
  **************************************************************************************************/
-package com.example.ti.ble.sensortag;
+package com.lemariva.androidthings.ble.sensortag;
 
 import java.util.List;
 

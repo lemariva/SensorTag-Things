@@ -56,8 +56,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import com.example.ti.ble.common.GattInfo;
-import com.example.ti.ble.sensortag.R;
+import com.lemariva.androidthings.ble.common.GattInfo;
+import com.lemariva.androidthings.ble.sensortag.R;
 
 import android.view.Display;
 import android.view.View;
@@ -85,7 +85,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
-import com.example.ti.util.SparkLineView;
+import com.lemariva.androidthings.util.SparkLineView;
 import android.widget.CompoundButton;
 
 public class GenericCharacteristicTableRow extends TableRow implements View.OnClickListener, Animation.AnimationListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
@@ -107,14 +107,14 @@ public class GenericCharacteristicTableRow extends TableRow implements View.OnCl
 	public final TextView onOffLegend;
 	public final TextView periodLegend;
 	public final Button calibrateButton;
-	public final static String ACTION_PERIOD_UPDATE = "com.example.ti.util.ACTION_PERIOD_UPDATE";
-	public final static String ACTION_ONOFF_UPDATE = "com.example.ti.util.ACTION_ONOFF_UPDATE";
-	public final static String ACTION_CALIBRATE = "com.example.ti.util.ACTION_CALIBRATE";
-	public final static String EXTRA_SERVICE_UUID = "com.example.ti.util.EXTRA_SERVICE_UUID";
-	public final static String EXTRA_PERIOD = "com.example.ti.util.EXTRA_PERIOD";
-	public final static String EXTRA_ONOFF = "com.example.ti.util.EXTRA_ONOFF";
+	public final static String ACTION_PERIOD_UPDATE = "com.lemariva.androidthings.util.ACTION_PERIOD_UPDATE";
+	public final static String ACTION_ONOFF_UPDATE = "com.lemariva.androidthings.util.ACTION_ONOFF_UPDATE";
+	public final static String ACTION_CALIBRATE = "com.lemariva.androidthings.util.ACTION_CALIBRATE";
+	public final static String EXTRA_SERVICE_UUID = "com.lemariva.androidthings.util.EXTRA_SERVICE_UUID";
+	public final static String EXTRA_PERIOD = "com.lemariva.androidthings.util.EXTRA_PERIOD";
+	public final static String EXTRA_ONOFF = "com.lemariva.androidthings.util.EXTRA_ONOFF";
 	public int periodMinVal;
-	
+
 	public static boolean isCorrectService(String uuidString) {
 		return true;
 	}
@@ -198,14 +198,16 @@ public class GenericCharacteristicTableRow extends TableRow implements View.OnCl
 				setEnabled(false);
 			}
 		};
-		
+
 		this.onOff = new Switch(con) {
 			{
 			setVisibility(View.INVISIBLE);
 			setId(100);
-			setChecked(true);
+			//setChecked(true);
 			}
 		};
+
+
 		this.periodBar = new SeekBar(con) {
 			{
 				setVisibility(View.INVISIBLE);

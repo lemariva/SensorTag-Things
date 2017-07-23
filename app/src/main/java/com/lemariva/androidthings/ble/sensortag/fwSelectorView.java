@@ -50,36 +50,29 @@
 
 
  **************************************************************************************************/
-package com.example.ti.ble.sensortag;
+package com.lemariva.androidthings.ble.sensortag;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.PopupWindow;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
-import com.example.ti.util.firmwareEntryTableRow;
-import com.example.ti.util.tiFirmwareEntry;
+import com.lemariva.androidthings.util.firmwareEntryTableRow;
+import com.lemariva.androidthings.util.tiFirmwareEntry;
 
 import java.util.List;
 
 public class fwSelectorView extends DialogFragment {
-    public final static String ACTION_FW_WAS_SELECTED = "com.example.ti.ble.sensortag.fwSelectorView.SELECTED";
-    public final static String EXTRA_SELECTED_FW_INDEX = "com.example.ti.ble.sensortag.fwSelectorView.EXTRA_SELECTED_FW_INDEX";
+    public final static String ACTION_FW_WAS_SELECTED = "com.lemariva.androidthings.ble.sensortag.fwSelectorView.SELECTED";
+    public final static String EXTRA_SELECTED_FW_INDEX = "com.lemariva.androidthings.ble.sensortag.fwSelectorView.EXTRA_SELECTED_FW_INDEX";
     List<tiFirmwareEntry> firmwares = null;
     TableLayout table = null;
     float cFW;

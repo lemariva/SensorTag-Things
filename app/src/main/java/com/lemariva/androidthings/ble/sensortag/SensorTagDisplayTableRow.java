@@ -1,5 +1,5 @@
 /**************************************************************************************************
- Filename:       firmwareEntryTableRow.java
+ Filename:       SensorTagDisplayTableRow.java
 
  Copyright (c) 2013 - 2015 Texas Instruments Incorporated
 
@@ -50,81 +50,77 @@
 
 
  **************************************************************************************************/
-package com.lemariva.androidthings.util;
+package com.lemariva.androidthings.ble.sensortag;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
-import com.lemariva.androidthings.ble.sensortag.R;
+import com.lemariva.androidthings.util.GenericCharacteristicTableRow;
 
-public class firmwareEntryTableRow extends TableRow {
-    private final Paint linePaint;
-    protected final RelativeLayout rowLayout;
-    TextView subTitleView;
-    TextView tV;
-    tiFirmwareEntry ent;
-    public int position;
-    public firmwareEntryTableRow(Context con,tiFirmwareEntry entry) {
+public class SensorTagDisplayTableRow extends GenericCharacteristicTableRow {
+
+    EditText displayText;
+    CheckBox displayInvert;
+    CheckBox displayClock;
+
+    SensorTagDisplayTableRow(Context con) {
         super(con);
-        this.ent = entry;
-        this.linePaint = new Paint() {
-            {
-                setStrokeWidth(1);
-                setARGB(255, 0, 0, 0);
-            }
-        };
-        this.rowLayout = new RelativeLayout(con);
+        this.title.setText("Display control");
 
-        tV = new TextView(con);
-        //tV.setId(500);
-        if (tV != null) {
-            tV.setText(String.format("%s %1.2f %s(%s)",entry.BoardType,entry.Version,entry.DevPack + " ",entry.WirelessStandard));
-        }
+        this.displayText = new EditText(con);
+        this.displayText.setMaxLines(1);
+        this.displayText.setInputType(InputType.TYPE_CLASS_TEXT);
+        this.displayText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        this.displayText.setId(600);
+        int maxLength = 16;
+        this.displayText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 
-        tV.setPadding(10,5,10,5);
-        tV.setTextSize(20);
-        //tV.setTypeface(Typeface.DEFAULT_BOLD);
-        RelativeLayout.LayoutParams tmpLayoutParams = new RelativeLayout.LayoutParams(
+        this.displayInvert = new CheckBox(con);
+        this.displayInvert.setText("Invert display");
+        this.displayInvert.setId(601);
+
+        this.displayClock = new CheckBox(con);
+        this.displayClock.setText("Clock mode");
+        this.displayClock.setId(602);
+
+        RelativeLayout.LayoutParams displayTextLayout = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        displayTextLayout.addRule(RelativeLayout.BELOW,
+                this.title.getId());
+        displayTextLayout.setMargins(70, 30, 30, 20);
+        displayTextLayout.addRule(RelativeLayout.RIGHT_OF, icon.getId());
+        this.displayText.setLayoutParams(displayTextLayout);
+
+        RelativeLayout.LayoutParams displayInvertLayout = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tmpLayoutParams.addRule(RelativeLayout.BELOW, tV.getId());
+        displayInvertLayout.setMargins(30, 10, 0, 30);
+        displayInvertLayout.addRule(RelativeLayout.BELOW, this.displayText.getId());
+        displayInvertLayout.addRule(RelativeLayout.RIGHT_OF, icon.getId());
+        this.displayInvert.setLayoutParams(displayInvertLayout);
 
+        RelativeLayout.LayoutParams displayClockLayout = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        displayClockLayout.setMargins(30,10,0,30);
+        displayClockLayout.addRule(RelativeLayout.BELOW,this.displayText.getId());
+        displayClockLayout.addRule(RelativeLayout.RIGHT_OF, displayInvert.getId());
+        this.displayClock.setLayoutParams(displayClockLayout);
 
-        subTitleView = new TextView(con);
-        if (subTitleView != null) {
-            if (entry.compatible) subTitleView.setText(String.format("%s","Compatible"));
-            else subTitleView.setText("Not compatible");
-        }
-        subTitleView.setTextSize(12);
-        subTitleView.setLayoutParams(tmpLayoutParams);
-        subTitleView.setPadding(10,5,10,5);
+        /* Remove most of the normal controls */
 
-        this.rowLayout.addView(tV);
-        this.rowLayout.addView(subTitleView);
-        this.addView(this.rowLayout);
+        this.rowLayout.removeAllViews();
+        this.rowLayout.addView(this.title);
+        this.rowLayout.addView(this.icon);
+        this.rowLayout.addView(this.displayText);
+        this.rowLayout.addView(this.displayInvert);
+        this.rowLayout.addView(this.displayClock);
     }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawLine(0, canvas.getHeight() - this.linePaint.getStrokeWidth(), canvas.getWidth(), canvas.getHeight() - this.linePaint.getStrokeWidth(), this.linePaint);
-    }
 
-    public void setGrayedOut(Boolean grayed) {
-        if (grayed == true) {
-            tV.setTextColor(Color.LTGRAY);
-            subTitleView.setTextColor(Color.LTGRAY);
-        }
-        else {
-            tV.setTextColor(Color.BLACK);
-            subTitleView.setTextColor(Color.BLACK);
-        }
-    }
 }

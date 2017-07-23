@@ -1,5 +1,5 @@
 /**************************************************************************************************
-  Filename:       DeviceView.java
+  Filename:       BleDeviceInfo.java
 
   Copyright (c) 2013 - 2014 Texas Instruments Incorporated
 
@@ -12,7 +12,7 @@
   this software subject to the terms herein.  With respect to the foregoing patent
   license, such license is granted  solely to the extent that any such patent is necessary
   to Utilize the software alone.  The patent license shall not apply to any combinations which
-  include this software, other than combinations with devices manufactured by or for TI ('TI Devices').
+  include this software, other than combinations with devices manufactured by or for TI ('TI Devices'). 
   No hardware patent is licensed hereunder.
 
   Redistributions must preserve existing copyright notices and reproduce this license (including the
@@ -50,88 +50,30 @@
 
 
  **************************************************************************************************/
-package com.lemariva.androidthings.ble.sensortag;
+package com.lemariva.androidthings.ble.common;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.bluetooth.BluetoothDevice;
 
+public class BleDeviceInfo {
+  // Data
+  private BluetoothDevice mBtDevice;
+  private int mRssi;
 
+  public BleDeviceInfo(BluetoothDevice device, int rssi) {
+    mBtDevice = device;
+    mRssi = rssi;
+  }
 
-	// Fragment for Device View
-	public class DeviceView extends Fragment {
+  public BluetoothDevice getBluetoothDevice() {
+    return mBtDevice;
+  }
 
-	public static DeviceView mInstance = null;
+  public int getRssi() {
+    return mRssi;
+  }
 
-	// GUI
-	private TableLayout table;
-	public boolean first = true;
-	
-	// House-keeping
-	private DeviceActivity mActivity;
-	private boolean mBusy;
+  public void updateRssi(int rssiValue) {
+    mRssi = rssiValue;
+  }
 
-	// The last two arguments ensure LayoutParams are inflated properly.
-	View view;
-	
-	public DeviceView() {
-		super();
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-		mInstance = this;
-		mActivity = (DeviceActivity) getActivity();
-		
-		view = inflater.inflate(R.layout.generic_services_browser, container,false);
-		table = (TableLayout) view.findViewById(R.id.generic_services_layout);
-
-		// Notify activity that UI has been inflated
-		mActivity.onViewInflated(view);
-		
-		return view;
-	}
-
-	public void showProgressOverlay(String title) {
-		
-	}
-		
-	public void addRowToTable(TableRow row) {
-		if (first) {
-			table.removeAllViews();
-			table.addView(row);
-			table.requestLayout();
-			first = false;
-		}
-		else {
-			table.addView(row);
-			table.requestLayout();
-		}
-	}
-    public void removeRowsFromTable() {
-        table.removeAllViews();
-    }
-
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-	void setBusy(boolean f) {
-		if (f != mBusy)
-		{
-			mActivity.showBusyIndicator(f);
-			mBusy = f;
-		}
-	}
 }

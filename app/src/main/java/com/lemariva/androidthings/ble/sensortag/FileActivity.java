@@ -50,12 +50,7 @@
 
 
  **************************************************************************************************/
-package com.example.ti.ble.sensortag;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.List;
+package com.lemariva.androidthings.ble.sensortag;
 
 import android.app.Activity;
 import android.content.Context;
@@ -74,7 +69,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ti.ble.sensortag.R;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileActivity extends Activity {
   public final static String EXTRA_FILENAME = "ti.android.ble.devicemonitor.FILENAME";
