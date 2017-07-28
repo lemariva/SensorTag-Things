@@ -17,6 +17,7 @@
 package com.lemariva.androidthings.ble.sensortag;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -45,6 +46,9 @@ import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -53,6 +57,7 @@ import android.widget.Toast;
 import com.lemariva.androidthings.ble.common.HCIDefines;
 import com.lemariva.androidthings.ble.common.BleDeviceInfo;
 import com.lemariva.androidthings.ble.common.BluetoothLeService;
+import com.lemariva.androidthings.util.CustomToast;
 
 import java.io.File;
 import java.io.IOException;
@@ -189,6 +194,69 @@ public class MainActivity extends ViewPagerActivity {
 			e.printStackTrace();
 		}
 	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+			case R.id.opt_bt:
+				onBluetooth();
+				break;
+			case R.id.opt_e2e:
+				onUrl(URL_FORUM);
+				break;
+			case R.id.opt_sthome:
+				onUrl(URL_STHOME);
+				break;
+			case R.id.opt_license:
+				break;
+			case R.id.opt_about:
+				onAbout();
+				break;
+			case R.id.opt_exit:
+				Toast.makeText(this, "Exit...", Toast.LENGTH_SHORT).show();
+				finish();
+				break;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		this.optionsMenu = menu;
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void onUrl(final Uri uri) {
+		Intent web = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(web);
+	}
+
+	private void onBluetooth() {
+		Intent settingsIntent = new Intent(
+				android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+		startActivity(settingsIntent);
+	}
+
+
+	private void onLicense() {
+
+	}
+
+	private void onAbout() {
+		final Dialog dialog = new AboutDialog(this);
+		dialog.show();
+	}
+
 
 	/**
 	 * Verify the level of Bluetooth support provided by the hardware.
@@ -388,8 +456,7 @@ public class MainActivity extends ViewPagerActivity {
 		}
 
 		@Override
-		public void onCharacteristicReadRequest(BluetoothDevice device, int requestId, int offset,
-												BluetoothGattCharacteristic characteristic) {
+		public void onCharacteristicReadRequest(BluetoothDevice device, int requestId, int offset, BluetoothGattCharacteristic characteristic) {
 			long now = System.currentTimeMillis();
 			if (TimeProfile.CURRENT_TIME.equals(characteristic.getUuid())) {
 				Log.i(TAG, "Read CurrentTime");
@@ -417,8 +484,7 @@ public class MainActivity extends ViewPagerActivity {
 		}
 
 		@Override
-		public void onDescriptorReadRequest(BluetoothDevice device, int requestId, int offset,
-											BluetoothGattDescriptor descriptor) {
+		public void onDescriptorReadRequest(BluetoothDevice device, int requestId, int offset, BluetoothGattDescriptor descriptor) {
 			if (TimeProfile.CLIENT_CONFIG.equals(descriptor.getUuid())) {
 				Log.d(TAG, "Config descriptor read");
 				byte[] returnValue;
@@ -519,6 +585,37 @@ public class MainActivity extends ViewPagerActivity {
 		updateGuiState();
 	};
 
+
+	// Activity result handling
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+			case REQ_DEVICE_ACT:
+				// When the device activity has finished: disconnect the device
+				if (mConnIndex != NO_DEVICE) {
+					mBluetoothLeService.disconnect(mBluetoothDevice.getAddress());
+				}
+				break;
+
+			case REQ_ENABLE_BT:
+				// When the request to enable Bluetooth returns
+				if (resultCode == Activity.RESULT_OK) {
+
+					Toast.makeText(this, R.string.bt_on, Toast.LENGTH_SHORT).show();
+				} else {
+					// User did not enable Bluetooth or an error occurred
+					Toast.makeText(this, R.string.bt_not_on, Toast.LENGTH_SHORT).show();
+					finish();
+				}
+				break;
+			default:
+				CustomToast.middleBottom(this, "Unknown request code: " + requestCode);
+
+				// Log.e(TAG, "Unknown request code");
+				break;
+		}
+	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	/**

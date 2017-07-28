@@ -24,11 +24,22 @@
         android:textAlignment="center"
         android:textSize="16sp" />
 
-    <WebView
-        android:id="@+id/web_content"
-        android:layout_width="fill_parent"
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:src="@drawable/lemariva_logo" />
+
+    <EditText
+        android:id="@+id/lemariva"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="www.lemariva.com"
+        android:textSize="36sp" />
 
     <TextView
         android:id="@+id/footer"

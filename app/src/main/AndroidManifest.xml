@@ -70,14 +70,12 @@
             android:parentActivityName="FwUpdateActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="unspecified" />
-        <!--
         <activity
             android:name="com.lemariva.androidthings.ble.sensortag.PreferencesActivity"
             android:parentActivityName="DeviceActivity"
             android:screenOrientation="unspecified"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="Preferences"/>
-        -->
         <activity android:name="com.lemariva.androidthings.ble.sensortag.fwSelectorView"
             android:parentActivityName="FwUpdateActivity_CC26xx"
             android:configChanges="orientation|screenSize|keyboardHidden"

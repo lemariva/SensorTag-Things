@@ -324,7 +324,7 @@ import java.util.Map;
     }
 
 	private void startPreferenceActivity() {
-        /*
+
 		// Launch preferences
 		final Intent i = new Intent(this, PreferencesActivity.class);
 		i.putExtra(PreferencesActivity.EXTRA_SHOW_FRAGMENT,
@@ -332,7 +332,7 @@ import java.util.Map;
 		i.putExtra(PreferencesActivity.EXTRA_NO_HEADERS, true);
 		i.putExtra(EXTRA_DEVICE, mBluetoothDevice);
 		startActivityForResult(i, PREF_ACT_REQ);
-		*/
+
 	}
 
 	private void discoverServices() {
@@ -375,8 +375,7 @@ import java.util.Map;
 		@Override
 		public void onReceive(final Context context, Intent intent) {
 			final String action = intent.getAction();
-			final int status = intent.getIntExtra(BluetoothLeService.EXTRA_STATUS,
-					BluetoothGatt.GATT_SUCCESS);
+			final int status = intent.getIntExtra(BluetoothLeService.EXTRA_STATUS, BluetoothGatt.GATT_SUCCESS);
 
 
 			if (DeviceInformationServiceProfile.ACTION_FW_REV_UPDATED.equals(action)) {
