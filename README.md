@@ -19,4 +19,5 @@ Credit
 ---------------
 Based on:
 
-* Texas Instruments libraries: https://git.ti.com/sensortag-20-android/ (check https://github.com/lemariva/SensorTag-CC2650)
+* Texas Instruments libraries: https://git.ti.com/sensortag-20-android/
+	* Check: https://github.com/lemariva/SensorTag-CC2650 for a new version
