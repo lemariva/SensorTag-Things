@@ -7,7 +7,7 @@ More details comming soon!
 Requirements
 ---------------
 * Rasberry Pi v3
-* Android Things (tested on 0.8.1-devpreview)
+* Android Things (tested on 1.0)
 * Android Studio (>3.1.2)
 * SensorTag CC2650 (with BLE configuration) - (v1.12 or v1.20)
 
