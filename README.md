@@ -2,7 +2,7 @@
 
 This project connects the SensorTag CC2650 (BLE) with a Raspberry Pi v3 using Android Things.
 
-More details comming soon!
+:warning: Android Things Dashboard shutdown will begin on January 5, 2021. After January 5, 2022, Android Things Dashboard will be shut down completely and all remaining data will be deleted.
 
 Requirements
 ---------------
